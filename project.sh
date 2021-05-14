@@ -15,6 +15,9 @@ submoduleAction(){
     cd $submodule
     echo " 🤖 On passe sur la branche main "
     git switch main
+    if [ -n "${1}" ] && [ "${1}" = "branch" ]; then
+      git switch $2
+    fi
     if [ -f .gitmodules ]; then
       echo " 👉👉 Il y a un fichier .gitmodules"
       echo " 🤖🤖 RECUSIVITE !"
@@ -54,6 +57,7 @@ if [[ -z $1 ]]; then
   echo "Liste des paramètres :"
   echo " 👉 install : Installe l'ensemble des dépendances des différents MicroServices du projet"
   echo "    ⏩ sans argument = On initialise les submodules (branche main)"
+  echo "    ⏩ branch <nomDeLaBranche> = On initialise les submodules sur la branche voulue, si la branche n'existe pas, on reste sur main"
   echo "    ⏩ full = On initialise les submodules (main) et on installe les dépendances nodes"
   echo "    ⏩ npm = On installe les dépendances nodes sans toucher aux branches"
   echo " 👉 update : Met à jour l'ensemble des dépendances des différents MicroServices du projet"
@@ -68,7 +72,15 @@ if [ $1 == "install" ]; then
     echo " 🤖 Pas d'argument : On initialise les submodules (branche main)"
     submoduleAction
   fi
+  if [ -n "${2}" ] && [ "${2}" = "branch" ]; then
+    if [ -n "${3}" ]; then
+      echo " 🤖 On initialise les submodules et on essaye de passer sur la branche $3"
+      submoduleAction $2 $3
+    else
+      echo " 🤖 Il manque un argument !"
+    fi
 
+  fi
   if [ -n "${2}" ] && [ "${2}" = "full" ]; then
     echo " 🤖 On initialise les submodules (main) et on installe les dépendances nodes"
     #On attend que le process soit executé pour continuer
