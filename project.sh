@@ -13,6 +13,8 @@ submoduleAction(){
     echo " 👉👉 On est dans $currentDir et on a trouvé le submodule: $submodule"
     echo " 🤖 On va dans le répertoire $submodule"
     cd $submodule
+    echo " 🤖 On pull"
+    git pull
     echo " 🤖 On passe sur la branche main "
     git switch main
     if [ -n "${1}" ] && [ "${1}" = "branch" ]; then
