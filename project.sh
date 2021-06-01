@@ -19,6 +19,7 @@ submoduleAction(){
     git pull
     if [ -n "${1}" ] && [ "${1}" = "branch" ]; then
       git switch $2
+      git pull
     fi
     if [ -f .gitmodules ]; then
       echo " 👉👉 Il y a un fichier .gitmodules"
