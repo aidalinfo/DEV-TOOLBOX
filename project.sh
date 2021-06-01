@@ -7,6 +7,13 @@ submoduleAction(){
   echo " 🤖 On initialise et update les submodules "
   git submodule init
   git submodule update
+  echo " 🤖 On passe sur la branche main "
+  git switch main
+  echo " 🤖 On pull"
+  git pull
+  if [ -n "${1}" ] && [ "${1}" = "branch" ]; then
+    git switch $2
+  fi
   submodules=`cat .gitmodules|grep "path ="|sed -e 's/path = /\n/g'|sed -r '/^\s*$/d'`
   echo " 👉 On a trouvé les submodules suivants : $submodules"
   while read -r submodule; do
@@ -25,7 +32,7 @@ submoduleAction(){
       echo " 👉👉 Il y a un fichier .gitmodules"
       echo " 🤖🤖 RECUSIVITE !"
       #On attend que le process soit executé pour continuer
-      submoduleAction &
+      submoduleAction $1 $2&
       process_id=$!
       wait $process_id
     fi
