@@ -8,11 +8,11 @@ submoduleAction(){
   git submodule init
   git submodule update
   echo " 🤖 On passe sur la branche main "
-  git switch main
+  git checkout main
   echo " 🤖 On pull"
   git pull
   if [ -n "${1}" ] && [ "${1}" = "branch" ]; then
-    git switch $2
+    git checkout $2
   fi
   submodules=`cat .gitmodules|grep "path ="|sed -e 's/path = /\n/g'|sed -r '/^\s*$/d'`
   echo " 👉 On a trouvé les submodules suivants : $submodules"
@@ -21,11 +21,11 @@ submoduleAction(){
     echo " 🤖 On va dans le répertoire $submodule"
     cd $submodule
     echo " 🤖 On passe sur la branche main "
-    git switch main
+    git checkout main
     echo " 🤖 On pull"
     git pull
     if [ -n "${1}" ] && [ "${1}" = "branch" ]; then
-      git switch $2
+      git checkout $2
       git pull
     fi
     if [ -f .gitmodules ]; then
