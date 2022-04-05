@@ -1,4 +1,6 @@
 #!/bin/bash
+URL_SNIPPETS_VSCODE="https://raw.githubusercontent.com/aidalinfo/DEV-TOOLBOX/main/vscode/global-snippets.code-snippets"
+SNIPPETS_LOCAL_NAME="aidalinfo-global.code-snippets"
 
 submoduleAction(){
   echo " 👉 On entre dans la fonction submoduleAction avec l'argument $1"
@@ -61,6 +63,18 @@ npmAction(){
   done
 }
 
+vscodeAction(){
+err=$(curl --write-out '%{http_code}' $URL_SNIPPETS_VSCODE -o  ~/.config/Code/User/snippets/$SNIPPETS_LOCAL_NAME)
+if [ "$err" -ne "200" ]
+then
+	echo "Il y a eu un problème lors du téléchargement du fichier $SNIPPETS_LOCAL_NAME (HTTO ERROR $err)."
+	if [ -f ~/.config/Code/User/snippets/$SNIPPETS_LOCAL_NAME ]
+	then
+		rm -rf  ~/.config/Code/User/snippets/$SNIPPETS_LOCAL_NAME
+	fi
+	exit 2
+fi
+}
 
 if [[ -z $1 ]]; then
   echo " 🤘🤘🤘 Hello ! Il est attendu un paramètre pour ce script 🤘🤘🤘 "
@@ -72,6 +86,7 @@ if [[ -z $1 ]]; then
   echo "    ⏩ npm = On installe les dépendances nodes sans toucher aux branches"
   echo " 👉 update : Met à jour l'ensemble des dépendances des différents MicroServices du projet"
   echo " 👉 hostUpdate:[root] Inscrit fileStorage dans le host de votre machine afin de pouvoir utiliser le stockage de fichier en local"
+  echo " 👉 vscode: Récupère les personnalisations de vsCode (Snippets, ...) et les ajoutes au profil de l'utilisateur connecté "
   exit
 fi
 
@@ -125,4 +140,9 @@ fi
 if [ $1 == "hostUpdate" ]; then
   echo "Inscrit fileStorage dans le host de votre machine afin de pouvoir utiliser le stockage de fichier en local"
   echo "127.0.0.1       filesstorage" >> /etc/hosts
+fi
+
+if [ $1 == "vscode" ]; then
+  echo "Récupère les personnalisations de vsCode (Snippets, ...) et les ajoutes au profil de l'utilisateur connecté"
+  vscodeAction
 fi
