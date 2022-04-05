@@ -1,6 +1,7 @@
 {
 
 	"template component formulaire": {
+		
 		"scope": "vue",
 		"prefix": "formulaire",
 		"body": [
