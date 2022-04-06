@@ -740,6 +740,6 @@
 			"};",
 			"</script>"
 		],
-		"description": "$2 = nom de l'icon, $3 = nom du COMPONENTS"
+		"description": "$2 = nom de l'icon, $3 = nom du COMPONENTS.  Pour passer d'un champ à un autre n'oubliez pas de tabuler"
 	}
 }
