@@ -5,7 +5,7 @@
 		"prefix": "formulaire",
 		"body": [
 		"<template>", //mettre le nom de
-		"\t<FormLayout icon='${0:icon}' @ajouter='ajouter' @modifier='modifier' @reinitialiser='reinitialiser' typeItem='un/une $1'>",
+		"\t<FormLayout icon='${0:icon}' @ajouter='ajouter' @modifier='modifier' @reinitialiser='init' :disposition='disposition' :hasResetButton='hasResetButton' typeItem='un/une $1'>",
 	 		"\t\t<v-row>",
 
 			"\t\t</v-row>",
@@ -39,6 +39,8 @@
 		"\t\t\t};",
 		"\t\t},",
 		"\t},",
+			"hasResetButton: { type: Boolean, default: true },",
+    	"disposition: { type: String, default: 'default'},",
 		"},",
 		"computed: {",
 		"\t...mapState(['formsErrors']),",
@@ -76,7 +78,7 @@
 		"\t\t\t\t},",
 		"\t\t\t})",
 		"\t\t\t.then((__) => {",
-		"\t\t\t\tthis.reinitialiser();",
+		"\t\t\t\tthis.init();",
 		"\t\t\t\tthis.$store.commit('addAlert', {",
 		"\t\t\t\t\ttype: 'info',",
 		"\t\t\t\t\ttext: 'Votre $1 a été ajouté',",
@@ -320,7 +322,7 @@
 			"",
 			"  props: {",
 			"    withView: { type: Boolean, default: true },",
-			"    mainIcon: { type: String, default: \"mdi-store\" },",
+			"    mainIcon: { type: String, default: \"${3:icon du components}\" },",
 			"    object: { type: [Array, Object] },",
 			"    size: { type: String, default: \"md\" },",
 			"    action: { type: String, default: \"router\" },",
@@ -460,7 +462,7 @@
 			"};",
 			"</script>"
 		],
-		"description":"$2 = nom du COMPONENTS au pluriel. Pour passer d'un champ à un autre n'oubliez pas de tabuler"
+		"description":"$2 = nom du COMPONENTS au pluriel , $3 = icon mdi. Pour passer d'un champ à un autre n'oubliez pas de tabuler"
 	},
 	"Template composant Counter": {
 		"scope": "vue",
