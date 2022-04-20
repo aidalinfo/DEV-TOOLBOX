@@ -5,7 +5,7 @@
 		"prefix": "formulaire",
 		"body": [ 
 		"<template>", //mettre le nom de
-		"\t<FormLayout icon='${0:icon}' @ajouter='ajouter' @modifier='modifier' @reinitialiser='init' :disposition='disposition' :hasResetButton='hasResetButton' typeItem='un/une $1' :item='input' :disabled='input.${3:nom du/des champ(s) à remplir obligatoirement} ? false : true'>",
+		"\t<FormLayout icon='${0:icon}' @ajouter='ajouter' @modifier='modifier' @reinitialiser='init' :disposition='disposition' :hasResetButton='hasResetButton' typeItem='un/une $1' :item='input' :disabled='input.${3:nom du/des champ(s) requis} ? false : true'>",
 	 		"\t\t<v-row>",
 
 			"\t\t</v-row>",
@@ -41,6 +41,7 @@
 		"\t},",
 			"hasResetButton: { type: Boolean, default: true },",
     	"disposition: { type: String, default: 'default'},",
+			"componentParent: undefined",
 		"},",
 		"computed: {",
 		"\t...mapState(['formsErrors']),",
@@ -83,6 +84,11 @@
 		"\t\t\t\t\ttype: 'info',",
 		"\t\t\t\t\ttext: 'Votre $1 a été ajouté',",
 		"\t\t\t\t});",
+		"\t\t\t\tif (this.componentParent){",
+		"\t\t\t\t\tthis.\\$root.\\$emit(this.componentParent, __.data.$1Create);",
+		"\t\t\t\t{",
+		"\t\t\t\tthis.\\$root.$emit('skeleton--close');",
+		"\t\t\t\tthis.init();",
 		"\t\t\t\tthis.\\$root.\\$emit('skeleton--close-dialog');",
 		"\t\t\t\tthis.\\$root.\\$emit('${2:nom du components}--$1-create', __.data.$1Create);",
 		"\t\t\t\tthis.\\$root.\\$emit('skeleton--close-popup');",
