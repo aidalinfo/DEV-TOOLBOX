@@ -753,5 +753,93 @@
 			"</script>"
 		],
 		"description": "$2 = nom de l'icon, $3 = nom du COMPONENTS.  Pour passer d'un champ à un autre n'oubliez pas de tabuler"
-	}
+	},
+	"Template Controller": {
+	"scope":"javascript",
+	"prefix":"controller",
+	"body": [
+	"\t\timport { acl } from \"@aidalinfo/authorization-package\";",
+	"\t\timport { getFinding } from \"@aidalinfo/lib-resolver-helpers-package\";",
+	"\t\timport _ from \"lodash\"",
+	"",		
+	"\t\timport { $1Model } from \"../model.js\"",
+	"\t\timport { verif${1/(.*)/${1:/capitalize}/} } from \"../verif.js\"",
+	"",		
+	"\t\texport const mutations = {",
+	"\t\t\t$1Create: async (parent, args, { me, organisation, role }, info) => {",
+					"acl(me, role, \"$1Create\")",
+			
+					"let input = args.input",
+					"input.organisation = organisation",
+					"input.createdBy = me",
+			
+					"await verif${1/(.*)/${1:/capitalize}/}(input, organisation)",
+			
+					"let $1 = $1Model.create(input)",
+					"return ",
+	"\t\t\t},",
+			
+	"\t\t\t$1Delete: async (parent, args, { me, organisation, role }, info) => {",
+					"acl(me, role, \"$1Delete\")",
+			
+					"await $1Model.findOneAndDelete({ _id: args.id, organisation: organisation })",
+					"return true",
+  "\t\t\t},",
+			
+	"\t\t\t$1Update: async (parent, args, { me, organisation, role }, info) => {",
+					"acl(me, role, \"$1Update\")",
+					"let input = args.input;",
+			
+					"const $1 = await $1Model.findById(input.id)",
+					"_.merge($1, input);",
+					"await $1.save()",
+			
+					"return $1;",
+	"\t\t\t},",
+	"\t\t}",
+			
+	"\t\texport const queries = {",
+	"\t\t\t$1: async (parent, args, { me, organisation, role }, info) => {",
+					"acl(me, role, \"$1\")",
+					"const $1 = await $1Model.findById({ _id: args.id }).exec()",
+					"return (($1.organisation == organisation) ? $1 : null)",
+	"\t\t\t},",
+			
+	"\t\t\t$1s: async (parent, { pagination = {} }, { me, organisation, role }, info) => {",
+					"acl(me, role, '$1s')",
+			
+					"let finding = { organisation: organisation };",
+					"if (pagination.filter) {",
+						"finding = getFinding(pagination.filter, [], finding);",
+	"\t\t\t}",
+			
+					"return await $1Model.find(finding).sort(pagination.sort).skip(pagination.skip).limit(pagination.limit);",,
+	"\t\t\t},",
+			
+	"\t\t\t$1sCount: async (parent, { pagination = {} }, { me, organisation, role }, info) => {",
+					"acl(me, role, '$1s')",
+	"",	
+					"let finding = { organisation: organisation };",
+					"if (pagination.filter) {",
+						"finding = getFinding(pagination.filter, [], finding);",
+					"}",
+  "",
+	"\t\t\treturn await $1Model.find(finding).countDocuments();",
+	"\t\t\t},",
+	"\t\t}",
+			
+			"export const type = {",
+				"${1/(.*)/${1:/capitalize}/}: {",
+					"__resolveReference: async (parent, { me, organisation, role }, info) => {",
+						"const current = await $1Model.findOne({ _id: parent.id });",
+						"return ((current.organisation == organisation) ? current : null);",
+					"},",
+					"createdBy: (parent) => {",
+						"return ((parent.createdBy) ? { __typename: \"User\", id: parent.createdBy } : null)",
+					"},",
+				"}",
+			"}",
+		],
+		"description": "template qui permet de crée la structure d'un controller dans un micro service"
+	},
 }
