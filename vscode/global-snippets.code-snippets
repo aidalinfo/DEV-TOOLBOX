@@ -830,7 +830,7 @@
 	"\t\t\t\t\tfinding = getFinding(pagination.filter, [], finding);",
 	"\t\t\t\t}",
 	"",
-	"\t\t\t\treturn await $1Model.find(finding).sort(pagination.sort).skip(pagination.skip).limit(pagination.limit);",,
+	"\t\t\t\treturn await $1Model.find(finding).sort(pagination.sort).skip(pagination.skip).limit(pagination.limit);",
 	"\t\t\t},",
 	"",		
 	"\t\t\t$1sCount: async (parent, { pagination = {} }, { me, organisation, role }, info) => {",
