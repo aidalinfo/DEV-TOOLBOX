@@ -106,6 +106,7 @@
 			"            variables: {",
 			"              id: id,",
 			"            },",
+			"            fetchPolicy: \"no-cache\",",
 			"          })",
 			"          .then((data) => {",
 			"            let $1 = data.data.$1;",
