@@ -81,7 +81,7 @@
 			"          });",
 			"",
 			"          if (this.componentParent) {",
-			"            this.\\$root.$emit(",
+			"            this.\\$root.\\$emit(",
 			"              this.componentParent,",
 			"              __.data.$1Create",
 			"            );",
