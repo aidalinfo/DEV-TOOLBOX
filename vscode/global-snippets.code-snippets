@@ -216,7 +216,7 @@
 			"",
 			"\tdata: () => ({",
 			"",
-			"\t\tcustomFilters: {}",
+			"\t\tcustomFilters: {},",
 			"\t\theaders: [",
 			"\t\t\t{ text: \"\", value: \"object\", sortable: false },",
 			"\t\t\t{ text: \"Fichiers\", value: \"fichiers\" },",
