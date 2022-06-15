@@ -63,6 +63,19 @@ npmAction(){
   done
 }
 
+tagAction(){
+  for d in */ ; do
+    echo "$d"
+    cd $d
+    if [ -f package.json ]; then
+      echo "package.json existe, on tag"
+    
+      git tag -a $1 -m $2 && git push --tags
+    fi
+    cd ..
+  done
+}
+
 vscodeAction(){
 err=$(curl --write-out '%{http_code}' $URL_SNIPPETS_VSCODE -o  ~/.config/Code/User/snippets/$SNIPPETS_LOCAL_NAME)
 if [ "$err" -ne "200" ]
@@ -145,4 +158,18 @@ fi
 if [ $1 == "vscode" ]; then
   echo "Récupère les personnalisations de vsCode (Snippets, ...) et les ajoutes au profil de l'utilisateur connecté"
   vscodeAction
+fi
+
+if [ $1 == "tag" ]; then
+  echo " 🚀🤖 On tag les différents repository 🤖🚀"
+
+  if [ ! -n "${2}" ]  || [ ! -n "${3}" ]; then
+    echo " 🤖 Il manque un arguement : BYE BYE"
+    exit
+  fi
+
+   tagAction $2 $3
+
+
+
 fi
