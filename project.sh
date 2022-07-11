@@ -32,7 +32,7 @@ submoduleAction(){
     fi
     if [ -f .gitmodules ]; then
       echo " 👉👉 Il y a un fichier .gitmodules"
-      echo " 🤖🤖 RECUSIVITE !"
+      echo " 🤖🤖 RECURSIVITE !"
       #On attend que le process soit executé pour continuer
       submoduleAction $1 $2&
       process_id=$!
