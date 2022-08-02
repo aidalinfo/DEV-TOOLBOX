@@ -100,6 +100,7 @@ if [[ -z $1 ]]; then
   echo " 👉 update : Met à jour l'ensemble des dépendances des différents MicroServices du projet"
   echo " 👉 hostUpdate:[root] Inscrit fileStorage dans le host de votre machine afin de pouvoir utiliser le stockage de fichier en local"
   echo " 👉 vscode: Récupère les personnalisations de vsCode (Snippets, ...) et les ajoutes au profil de l'utilisateur connecté "
+  echo " 👉 tag <vX.X.X> <'message de tag'> : Permet de tagger l'ensemble des MS sur un nouveau tag (attention automate CI CD Github action) "
   exit
 fi
 
