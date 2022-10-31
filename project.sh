@@ -154,6 +154,10 @@ fi
 if [ $1 == "hostUpdate" ]; then
   echo "Inscrit fileStorage dans le host de votre machine afin de pouvoir utiliser le stockage de fichier en local"
   echo "127.0.0.1       filesstorage" >> /etc/hosts
+  echo "Inscrit test[123].local dans le host de votre machine afin de pouvoir tester l'accès à l'appli depuis différentes URL"
+  echo "127.0.0.1       test1.local" >> /etc/hosts
+  echo "127.0.0.1       test2.local" >> /etc/hosts
+  echo "127.0.0.1       test3.local" >> /etc/hosts
 fi
 
 if [ $1 == "vscode" ]; then
