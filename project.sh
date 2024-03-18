@@ -27,7 +27,12 @@ submoduleAction(){
     echo " 🤖 On pull"
     git pull
     if [ -n "${1}" ] && [ "${1}" = "branch" ]; then
-      git checkout $2
+      if [ -n "${2}" ] && [ -n "${3}" ]; then
+        echo " 🤖 On passe sur la branche $2 ou $3"
+        git checkout $2 || git checkout $3
+      else
+       git checkout $2
+      fi
       git pull
     fi
     if [ -f .gitmodules ]; then
@@ -94,7 +99,7 @@ if [[ -z $1 ]]; then
   echo "Liste des paramètres :"
   echo " 👉 install : Installe l'ensemble des dépendances des différents MicroServices du projet"
   echo "    ⏩ sans argument = On initialise les submodules (branche main)"
-  echo "    ⏩ branch <nomDeLaBranche> = On initialise les submodules sur la branche voulue, si la branche n'existe pas, on reste sur main"
+  echo "    ⏩ branch [nomDeLaBranche] [nomDeLaBrancheDeRepli] = On initialise les submodules sur la branche voulue, il est possible de définir un branche de repli, si les branches n'existent pas, on reste sur main"
   echo "    ⏩ full = On initialise les submodules (main) et on installe les dépendances nodes"
   echo "    ⏩ npm = On installe les dépendances nodes sans toucher aux branches"
   echo " 👉 update : Met à jour l'ensemble des dépendances des différents MicroServices du projet"
@@ -114,7 +119,10 @@ if [ $1 == "install" ]; then
   if [ -n "${2}" ] && [ "${2}" = "branch" ]; then
     if [ -n "${3}" ]; then
       echo " 🤖 On initialise les submodules et on essaye de passer sur la branche $3"
-      submoduleAction $2 $3
+      if [ -n "${4}" ]; then
+        echo "Si la branche n'existe pas, on cherche à basculer sur $4 avant main"
+      fi
+      submoduleAction $2 $3 $4
     else
       echo " 🤖 Il manque un argument !"
     fi
@@ -172,9 +180,5 @@ if [ $1 == "tag" ]; then
     echo " 🤖 Il manque un arguement : BYE BYE"
     exit
   fi
-
    tagAction $2 $3
-
-
-
 fi
