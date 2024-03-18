@@ -177,11 +177,11 @@ echo "CI/CD mode! 🚀"
              # Lister les branches distantes et filtrer par les préfixes désirés
             branches=$(git branch -r | grep -E "origin/(${patternFind})" | sed 's/origin\///')
             cd "$rootDir"
-            # Lister les branches contenant ce commit
+            # Lister les branches 
             for branch in $branches; do
                 branch=$(echo "$branch" | xargs)  # Nettoyer les espaces
                 echo "Fusion de $branch dans $targetBranch pour $dir..."
-                check_and_multiple_pr "$dir" "$branch" "$targetBranch" 
+                check_and_multiple_pr "$dir" "$branch" "$targetBranch" $4 $5
             done
         fi
     done
