@@ -39,7 +39,7 @@ submoduleAction(){
       echo " 👉👉 Il y a un fichier .gitmodules"
       echo " 🤖🤖 RECURSIVITE !"
       #On attend que le process soit executé pour continuer
-      submoduleAction $1 $2&
+      submoduleAction $1 $2 $3&
       process_id=$!
       wait $process_id
     fi
@@ -180,5 +180,9 @@ if [ $1 == "tag" ]; then
     echo " 🤖 Il manque un arguement : BYE BYE"
     exit
   fi
+
    tagAction $2 $3
+
+
+
 fi
