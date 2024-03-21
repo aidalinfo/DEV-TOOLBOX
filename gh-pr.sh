@@ -176,6 +176,7 @@ echo "CI/CD mode! 🚀"
             git fetch --all
              # Lister les branches distantes et filtrer par les préfixes désirés
             branches=$(git branch -r | grep -E "origin/(${patternFind})" | sed 's/origin\///')
+            echo "Branches distantes : $branches" pour $dir
             cd "$rootDir"
             # Lister les branches 
             for branch in $branches; do
