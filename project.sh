@@ -68,6 +68,23 @@ npmAction(){
   done
 }
 
+ensurePnpm(){
+  if ! command -v pnpm >/dev/null 2>&1; then
+    echo " 🤖 pnpm n'est pas installé, tentative d'installation globale via npm"
+    if command -v npm >/dev/null 2>&1; then
+      if npm install -g pnpm; then
+        echo " ✅ pnpm installé avec succès"
+      else
+        echo " ❌ Impossible d'installer pnpm automatiquement. Installez-le manuellement puis relancez."
+        exit 1
+      fi
+    else
+      echo " ❌ npm n'est pas disponible pour installer pnpm. Installez npm/pnpm puis relancez."
+      exit 1
+    fi
+  fi
+}
+
 tagAction(){
   for d in */ ; do
     echo "$d"
@@ -108,6 +125,8 @@ if [[ -z $1 ]]; then
   echo " 👉 tag <vX.X.X> <'message de tag'> : Permet de tagger l'ensemble des MS sur un nouveau tag (attention automate CI CD Github action) "
   exit
 fi
+
+ensurePnpm
 
 if [ $1 == "install" ]; then
   echo " 🚀🤖 On installe le projet 🤖🚀"
