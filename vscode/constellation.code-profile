@@ -49,6 +49,7 @@
     "esbenp.prettier-vscode",
     "vue.volar",
     "dbaeumer.vscode-eslint",
+    "ms-azuretools.vscode-docker",
     "graphql.vscode-graphql-syntax"
   ]
 }
