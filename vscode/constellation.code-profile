@@ -1,0 +1,54 @@
+{
+  "name": "constallation-dev-profile",
+  "settings": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2,
+    "editor.detectIndentation": false,
+    "editor.formatOnPaste": true,
+    "editor.rulers": [
+      80,
+      120
+    ],
+    "editor.wordWrapColumn": 120,
+    "prettier.requireConfig": true,
+    "prettier.configPath": ".prettierrc.js",
+    "prettier.useEditorConfig": false,
+    "[vue]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.formatOnSave": true
+    },
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[json]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[jsonc]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[graphql]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "eslint.enable": true,
+    "eslint.validate": [
+      "javascript",
+      "typescript",
+      "vue"
+    ],
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    },
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "typescript.updateImportsOnFileMove.enabled": "always"
+  },
+  "extensions": [
+    "esbenp.prettier-vscode",
+    "vue.volar",
+    "dbaeumer.vscode-eslint",
+    "graphql.vscode-graphql-syntax"
+  ]
+}
