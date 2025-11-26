@@ -54,8 +54,13 @@ npmAction(){
       cd $d
       if [ -f package.json ]; then
         echo "package.json existe, on installe"
-        # --no-save permet de ne pas toucher au package-lock.json
-        npm install --no-save
+        if [ -f pnpm-lock.yaml ]; then
+          echo "pnpm-lock.yaml existe, on installe via pnpm"
+          pnpm i
+        else 
+          # --no-save permet de ne pas toucher au package-lock.json
+          npm install --no-save
+        fi
       fi
       if [ -f .gitmodules ] && [ -n "${2}" ] && [ "${2}" = "all" ]; then
       # if [ -f .gitmodules && $2 == "all" ]; then
@@ -172,7 +177,13 @@ if [ $1 == "update" ]; then
 
       if [ -f package.json ]; then
         echo "package.json existe, on met à jour"
-        npm update
+        if [ -f pnpm-lock.yaml ]; then
+          echo "pnpm-lock.yaml détecté, update via pnpm"
+          pnpm update
+        else 
+          echo "update via npm"  
+          npm update
+        fi
       fi
       cd ..
   done
