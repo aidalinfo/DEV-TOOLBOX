@@ -96,11 +96,63 @@ tagAction(){
     cd $d
     if [ -f package.json ]; then
       echo "package.json existe, on tag"
-    
+
       git tag -a $1 -m $2 && git push --tags
     fi
     cd ..
   done
+}
+
+registerRemoteVscode(){
+  USER_REMOTE="$1"
+  HOST="$2"
+  PATH_REMOTE="$3"
+  ALIAS_NAME="$4"
+
+  if [ "$#" -ne 4 ]; then
+    echo "❌ Arguments manquants"
+    echo "Exemple:"
+    echo "  ./project.sh register killian 192.168.3.245 /home/killian remote-home"
+    exit 1
+  fi
+
+  # Détection de tous les fichiers de configuration shell existants
+  SHELL_RCS=()
+  if [ -f "$HOME/.zshrc" ]; then
+    SHELL_RCS+=("$HOME/.zshrc")
+  fi
+  if [ -f "$HOME/.bashrc" ]; then
+    SHELL_RCS+=("$HOME/.bashrc")
+  fi
+
+  if [ ${#SHELL_RCS[@]} -eq 0 ]; then
+    echo "❌ Aucun fichier de configuration shell trouvé (.zshrc ou .bashrc)"
+    exit 1
+  fi
+
+  # Vérification si la commande existe déjà dans l'un des fichiers
+  for SHELL_RC in "${SHELL_RCS[@]}"; do
+    if grep -q "^[[:space:]]*$ALIAS_NAME()" "$SHELL_RC"; then
+      echo "⚠️ La commande '$ALIAS_NAME' existe déjà dans $SHELL_RC"
+      exit 1
+    fi
+  done
+
+  echo "➡️ Enregistrement de la commande '$ALIAS_NAME'..."
+
+  # Ajout de l'alias dans tous les fichiers trouvés
+  for SHELL_RC in "${SHELL_RCS[@]}"; do
+    cat <<EOF >> "$SHELL_RC"
+
+# Remote VS Code shortcut: $ALIAS_NAME
+$ALIAS_NAME () {
+    code --remote ssh-remote+${USER_REMOTE}@${HOST} "${PATH_REMOTE}"
+}
+EOF
+    echo "✅ Commande '$ALIAS_NAME' ajoutée dans $SHELL_RC"
+  done
+
+  echo "🔄 Recharge ton shell avec : source ~/.zshrc ou source ~/.bashrc"
 }
 
 vscodeAction(){
@@ -128,6 +180,7 @@ if [[ -z $1 ]]; then
   echo " 👉 hostUpdate:[root] Inscrit fileStorage dans le host de votre machine afin de pouvoir utiliser le stockage de fichier en local"
   echo " 👉 vscode: Récupère les personnalisations de vsCode (Snippets, ...) et les ajoutes au profil de l'utilisateur connecté "
   echo " 👉 tag <vX.X.X> <'message de tag'> : Permet de tagger l'ensemble des MS sur un nouveau tag (attention automate CI CD Github action) "
+  echo " 👉 register <user> <host> <remote_path> <alias_name> : Enregistre un alias pour ouvrir VS Code en mode remote SSH"
   exit
 fi
 
@@ -215,4 +268,17 @@ if [ $1 == "tag" ]; then
 
 
 
+fi
+
+if [ $1 == "register" ]; then
+  echo " 🚀🤖 Enregistrement d'un alias VS Code Remote SSH 🤖🚀"
+
+  if [ ! -n "${2}" ] || [ ! -n "${3}" ] || [ ! -n "${4}" ] || [ ! -n "${5}" ]; then
+    echo " 🤖 Il manque un argument : BYE BYE"
+    echo "Usage: ./project.sh register <user> <host> <remote_path> <alias_name>"
+    echo "Exemple: ./project.sh register killian 192.168.3.245 /home/killian remote-home"
+    exit
+  fi
+
+  registerRemoteVscode $2 $3 $4 $5
 fi
