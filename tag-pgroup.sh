@@ -17,12 +17,27 @@ BASE_TAG="v2.0.0-pgroup"
 DRY_RUN=false
 VERSION_TYPE="patch" # par défaut: patch
 
+# Repos à exclure (utilisent des tags simples vX.Y.Z sans suffixe)
+EXCLUDED_REPOS=("ms-ai-kit" "router-cosmo")
+
+# Fonction pour vérifier si un repo est exclu
+is_excluded() {
+  local repo_name="$1"
+  for excluded in "${EXCLUDED_REPOS[@]}"; do
+    if [[ "$repo_name" == "$excluded" ]]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
 # Découverte dynamique des dépôts principaux (frontend-* + ms-*)
 discover_repos() {
   local repos=()
   shopt -s nullglob
   for dir in frontend-* ms-*; do
-    if [ -d "$dir/.git" ]; then
+    # Vérifier si c'est un repo git (dossier .git ou fichier .git pour submodules)
+    if [ -d "$dir/.git" ] || [ -f "$dir/.git" ]; then
       repos+=("$dir")
     fi
   done
@@ -30,7 +45,11 @@ discover_repos() {
   printf '%s\n' "${repos[@]}"
 }
 
-mapfile -t REPOS < <(discover_repos)
+# Charger les repos et filtrer les entrées vides
+REPOS=()
+while IFS= read -r repo; do
+  [[ -n "$repo" ]] && REPOS+=("$repo")
+done < <(discover_repos)
 
 # Dossier des sous-modules frontend (COMPONENTS-*)
 FRONTEND_COMPONENTS_DIR="frontend-constellation/src/components"
@@ -156,6 +175,14 @@ ERROR_COUNT=0
 process_repo() {
   local repo_path="$1"
   local display_name="${2:-$repo_path}"
+  local base_name=$(basename "$repo_path")
+
+  # Vérifier si le repo est exclu
+  if is_excluded "$base_name"; then
+    echo -e "${YELLOW}⚠${NC}  $display_name exclu (utilise des tags simples)"
+    SKIP_COUNT=$((SKIP_COUNT + 1))
+    return
+  fi
 
   echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
   echo -e "${BLUE}Traitement de: $display_name${NC}"

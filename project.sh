@@ -2,6 +2,17 @@
 URL_SNIPPETS_VSCODE="https://raw.githubusercontent.com/aidalinfo/DEV-TOOLBOX/main/vscode/global-snippets.code-snippets"
 SNIPPETS_LOCAL_NAME="aidalinfo-global.code-snippets"
 
+shouldSkipSubmodule(){
+  local submodule="$1"
+  if [[ "$submodule" == libs/* ]]; then
+    return 0
+  fi
+  if [[ "$submodule" == "mcp-knowledge-base" ]]; then
+    return 0
+  fi
+  return 1
+}
+
 submoduleAction(){
   echo " 👉 On entre dans la fonction submoduleAction avec l'argument $1"
   currentDir=`pwd`
@@ -19,9 +30,16 @@ submoduleAction(){
   submodules=`cat .gitmodules|grep "path ="|sed -e 's/path = /\n/g'|sed -r '/^\s*$/d'`
   echo " 👉 On a trouvé les submodules suivants : $submodules"
   while read -r submodule; do
+    if shouldSkipSubmodule "$submodule"; then
+      echo " ⏭️  Submodule ignoré: $submodule"
+      continue
+    fi
     echo " 👉👉 On est dans $currentDir et on a trouvé le submodule: $submodule"
     echo " 🤖 On va dans le répertoire $submodule"
-    cd $submodule
+    if ! cd "$submodule"; then
+      echo " ⚠️  Impossible d'entrer dans $submodule, on ignore."
+      continue
+    fi
     echo " 🤖 On passe sur la branche main "
     git checkout main
     echo " 🤖 On pull"
@@ -35,7 +53,7 @@ submoduleAction(){
       fi
       git pull
     fi
-    if [ -f .gitmodules ]; then
+    if [ -f .gitmodules ] && [ "`pwd`" != "$currentDir" ]; then
       echo " 👉👉 Il y a un fichier .gitmodules"
       echo " 🤖🤖 RECURSIVITE !"
       #On attend que le process soit executé pour continuer
@@ -44,7 +62,7 @@ submoduleAction(){
       wait $process_id
     fi
       echo " 🤖 On retourne dans le répertoire $currentDir"
-      cd $currentDir
+      cd "$currentDir"
   done <<< $submodules
 }
 
